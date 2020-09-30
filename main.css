@@ -5,15 +5,16 @@ html {
 }
 
 body {
-    background: #fff;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+    
     color: #545454;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
-    margin: 0 auto;
-    max-width: 800px;
-    padding: 2em 2em 4em;
+
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, img {
+    animation: appear 2s cubic-bezier(0, 0, .78, .36) 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -39,7 +40,7 @@ samp {
 }
 
 img {
-    animation: colorize 2s cubic-bezier(0, 0, .78, .36) 1;
+    
     background: transparent;
     border: 10px solid rgba(0, 0, 0, 0.12);
     border-radius: 4px;
@@ -48,13 +49,46 @@ img {
     max-width: 95%;
 }
 
-@keyframes colorize {
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    left: 0%;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background: #ddd;
+    color: black;
+}
+
+.main {
+    
+    margin-top: 20px;
+    max-width: 800px;
+    padding: 2em 2em 4em;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+    
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+}
+
+@keyframes appear {
     0% {
-        -webkit-filter: grayscale(100%);
-        filter: grayscale(100%);
+        opacity: 0;
     }
     100% {
-        -webkit-filter: grayscale(0%);
-        filter: grayscale(0%);
+        opacity: 1;
     }
 }
