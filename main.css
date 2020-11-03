@@ -33,7 +33,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, img, iframe {
-    animation: appear 2s cubic-bezier(0, 0, .78, .36) 1;
+    animation: appear 1.5s cubic-bezier(0, 0, .78, .36) 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -95,8 +95,8 @@ img {
 
 .main {
     margin-top: 20px;
-    max-width: 800px;
-    padding: 2.75em 2.75em 4em;
+    max-width: 900px;
+    padding: 3em 3em 4em;
     margin-left: auto;
     margin-right: auto;
     background: #fff;
