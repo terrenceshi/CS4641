@@ -107,6 +107,52 @@
                     fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
                     fires['STATE'] = le.fit_transform(fires['STATE']) </code>   
 				</pre>
+                <p>
+                    Another nice touch we'll add is removing all data points will NaN values since sparse data is going to give us a headache.
+                </p>
+                <pre>
+                    <code>data = data.dropna()</code>
+                </pre>
+                <p>
+                    Next, let's comb through some of our features and make sure everything's in order. First, let's look at the latitude and longitude plot of the fires to make sure nothing is amiss.
+                </p>
+                <img src = "">
+                <p>
+                    Wow! Look at that - the latitude and longitude points make a map of the US, a pleasant surprise. Unsurprisingly, the top half of alaska is missing - it's probably too cold there haha. But wait, why are there some points on the map in bottom left (middle of the ocean)? Could these be errors in input? Actually, after looking up those points, they seem to be the coordinates in Puerto Rico, so it's good to know just how comprehensive our dataset actually is.
+                </p>
+                <p>
+                    Another feature we must look at is the distribution of the fires over time. Originally, I thought to myself, "has firefighting gotten easier with time (e.g. - is the fire duration decreasing as time goes on)?" This is a great question to get us started at plotting the data.
+                </p>
+                <img src = "">
+                <p>
+                    This is rather interesting - it seems as if before ~1998, fires didn't last very long at all. However, I don't believe that to be the case - instead I will assume for now that fires simply were not tracked as well. This will have to be something we come back to in the future. Another very interesting finding is that we see an almost cyclical fluctuation of fire duration every year. This makes sense - after all, fires in the summer months are probably going to last longer due to the heat. Finally, we notice some very high outliers - the data indicates that one fire lasted upwards of 4 years! Unfortunately, this cannot be correct and even after looking up the fire codes and such, I found no such mention of the 4 year fire.
+                </p>
+                <p>
+                    Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
+                </p>
+                <pre>
+                    <code>removed_outliers2 = data[(np.abs(stats.zscore(data['BETTER_DURATION'])) < 15)]
+temp_indices = removed_outliers2['BETTER_DURATION'].gt(1)
+longer_fires = removed_outliers2[temp_indices]</code>
+                </pre>
+                <h4>Searching for yearly patterns and Ridge Regression</h4>
+                <p>
+                    Remember how we noticed a cyclical cycle in how fire lengths increased and then decreased every year? Let's take a deeper look into understanding this and start actually creating a model to predict how long a future fire might last! First we use those handy month and day features and pseudo-aggregate them into a time of the year feature which we call "DOTY". This is simply the month plus the day divided by 30, so it'll range from ~1 to 13, which is good enough for our purposes. Next we plot the DOTY against the fire duration, and voila!
+                </p>
+                <img src ="">
+                <p>
+                    Incroyable! While there certainly are outliers, we see a clear trend that in the summer months, the fire duration can potentially increase 5-fold. Next, let's try to generate a model to capture this information. We will use a cross-validated ridge regression model to attempt this.
+                </p>
+                <p>
+                    <pre>
+                        <code>X = np.array(longer_fires['DOTY']).reshape(-1, 1)
+y = np.array(longer_fires['BETTER_DURATION']).reshape(-1,1)
+rgr = RidgeCV().fit(X,y)
+rgr.score(X,y)</code>
+                    </pre>
+                </p>
+                Unfortunately, despite numerous attempts, we were unable to generate a good model thus far, producing scores close to zero (score = 0.0013). Despite trying +1 normalization, removing any fires with duration 0, and different models (even using polynomial fits), no model seemed to do the trick. I believe this may be because the overall duration of fires may not increase much in the summer, but instead we may just see more a combination of having more fires in the summer and a higher <b>chance</b> that a fire can last longer. In other words, fires didn't just uniformly increase in duration in the summer - you can see that there are still a number of fires that don't last long at all (the majority of fires). Another approach may be warranted to capture this in prediction model. In future experiments, we hope to capture this information perhaps perhaps by generating distribution data for each month or each day even. This may help us peer into the inner workings of fires and solve our prediction problem.
+                </p>
                 
                 <h4>Neural Network</h4>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;In this test, we essentially used the fire size and fire duration tables to predict the cause of the fire. To start, we calculate duration by finding the difference between the contained date and the discovery date. Next, we set X to a concatenated matrix of fire size and duration, while setting y to the labels of the cause of the fire. </p>
