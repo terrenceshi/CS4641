@@ -94,25 +94,29 @@
 		        <p>
 		        	Using the dataset, we can create features that may provide more information to us. Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates from timestamps to Julian dates, which are much more comprehensible. Next, the duration is a simple subtraction from the discovery of the fire to the date it was contained. Finally, from our Julian dates, we can extract the month, date, and year of each fire. The other preprocessing code simply formats the state and cause features properly.
 	        	</p>
+                <p>
 	        	<pre>
-                    <code>#Preprocessing
-                    fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-                    fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-                    fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
-                    fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
-                    fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
-                    fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
+<code>#Preprocessing
+fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
+fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
+fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
+fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
 
-                    le = preprocessing.LabelEncoder()
-                    fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
-                    fires['STATE'] = le.fit_transform(fires['STATE']) </code>   
+le = preprocessing.LabelEncoder()
+fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
+fires['STATE'] = le.fit_transform(fires['STATE']) </code>   
 				</pre>
+                </p>
                 <p>
                     Another nice touch we'll add is removing all data points will NaN values since sparse data is going to give us a headache.
                 </p>
+                <p>
                 <pre>
-                    <code>data = data.dropna()</code>
+                <code>data = data.dropna()</code>
                 </pre>
+                </p>
                 <p>
                     Next, let's comb through some of our features and make sure everything's in order. First, let's look at the latitude and longitude plot of the fires to make sure nothing is amiss.
                 </p>
@@ -131,7 +135,7 @@
                     Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
                 </p>
                 <pre>
-                    <code>removed_outliers2 = data[(np.abs(stats.zscore(data['BETTER_DURATION'])) < 15)]
+                <code>removed_outliers2 = data[(np.abs(stats.zscore(data['BETTER_DURATION'])) < 15)]
 temp_indices = removed_outliers2['BETTER_DURATION'].gt(1)
 longer_fires = removed_outliers2[temp_indices]</code>
                 </pre>
