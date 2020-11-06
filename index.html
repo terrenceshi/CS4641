@@ -94,20 +94,21 @@
 		        <p>
 		        	Using the dataset, we can create features that may provide more information to us. Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates from timestamps to Julian dates, which are much more comprehensible. Next, the duration is a simple subtraction from the discovery of the fire to the date it was contained. Finally, from our Julian dates, we can extract the month, date, and year of each fire. The other preprocessing code simply formats the state and cause features properly.
 	        	</p>
-	        	<code>
-	        		#Preprocessing
-					fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-					fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-					fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
-					fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
-					fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
-					fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
+	        	<pre>
+		        	<code>
+		        		#Preprocessing
+						fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+						fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+						fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
+						fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
+						fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
+						fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
 
-					le = preprocessing.LabelEncoder()
-					fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
-					fires['STATE'] = le.fit_transform(fires['STATE'])
-				</code>
-				
+						le = preprocessing.LabelEncoder()
+						fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
+						fires['STATE'] = le.fit_transform(fires['STATE'])
+					</code>
+				</pre>
 
                 
                 <h4>Neural Network</h4>
