@@ -118,21 +118,21 @@ fires['STATE'] = le.fit_transform(fires['STATE']) </code>
                 <p>
                     Next, let's comb through some of our features and make sure everything's in order. First, let's look at the latitude and longitude plot of the fires to make sure nothing is amiss.
                 </p>
-                <img src = "">
+                <img src = "assets/map.jpg">
                 <p>
                     Wow! Look at that - the latitude and longitude points make a map of the US, a pleasant surprise. Unsurprisingly, the top half of alaska is missing - it's probably too cold there haha. But wait, why are there some points on the map in bottom left (middle of the ocean)? Could these be errors in input? Actually, after looking up those points, they seem to be the coordinates in Puerto Rico, so it's good to know just how comprehensive our dataset actually is.
                 </p>
                 <p>
                     Another feature we must look at is the distribution of the fires over time. Originally, I thought to myself, "has firefighting gotten easier with time (e.g. - is the fire duration decreasing as time goes on)?" This is a great question to get us started at plotting the data.
                 </p>
-                <img src = "">
+                <img src = "assets/cyclical.jpg">
                 <p>
                     This is rather interesting - it seems as if before ~1998, fires didn't last very long at all. However, I don't believe that to be the case - instead I will assume for now that fires simply were not tracked as well. This will have to be something we come back to in the future. Another very interesting finding is that we see an almost cyclical fluctuation of fire duration every year. This makes sense - after all, fires in the summer months are probably going to last longer due to the heat. Finally, we notice some very high outliers - the data indicates that one fire lasted upwards of 4 years! Unfortunately, this cannot be correct and even after looking up the fire codes and such, I found no such mention of the 4 year fire.
                 </p>
                 <p>
                     Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
                 </p>
-                <img src = "">
+                <img src = "assets/scatter.jpg">
                 <pre>
 <code>removed_outliers2 = data[(np.abs(stats.zscore(data['BETTER_DURATION'])) < 15)]
 temp_indices = removed_outliers2['BETTER_DURATION'].gt(1)
@@ -142,7 +142,7 @@ longer_fires = removed_outliers2[temp_indices]</code>
                 <p>
                     Remember how we noticed a cyclical cycle in how fire lengths increased and then decreased every year? Let's take a deeper look into understanding this and start actually creating a model to predict how long a future fire might last! First we use those handy month and day features and pseudo-aggregate them into a time of the year feature which we call "DOTY". This is simply the month plus the day divided by 30, so it'll range from ~1 to 13, which is good enough for our purposes. Next we plot the DOTY against the fire duration, and voila!
                 </p>
-                <img src ="">
+                <img src ="assets/year_length.jpg">
                 <p>
                     Incroyable! While there certainly are outliers, we see a clear trend that in the summer months, the fire duration can potentially increase 5-fold. Next, let's try to generate a model to capture this information. We will use a cross-validated ridge regression model to attempt this.
                 </p>
