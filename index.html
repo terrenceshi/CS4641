@@ -89,6 +89,26 @@
 					<br>STATE = Two-letter alphabetic code for the state in which the fire burned (or originated), based on the nominal designation in the fire report.
 					<br>COUNTY = County, or equivalent, in which the fire burned (or originated), based on nominal designation in the fire report.
 		        </p>
+
+		        <h4>Searching for outliers and creating new features</h4>
+		        <p>
+		        	Using the dataset, we can create features that may provide more information to us. Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates from timestamps to Julian dates, which are much more comprehensible. Next, the duration is a simple subtraction from the discovery of the fire to the date it was contained. Finally, from our Julian dates, we can extract the month, date, and year of each fire. The other preprocessing code simply formats the state and cause features properly.
+	        	</p>
+	        	<code>
+	        		#Preprocessing
+					fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+					fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
+					fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
+					fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
+					fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
+					fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
+
+					le = preprocessing.LabelEncoder()
+					fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
+					fires['STATE'] = le.fit_transform(fires['STATE'])
+				</code>
+				
+
                 
                 <h4>Neural Network</h4>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;In this test, we essentially used the fire size and fire duration tables to predict the cause of the fire. To start, we calculate duration by finding the difference between the contained date and the discovery date. Next, we set X to a concatenated matrix of fire size and duration, while setting y to the labels of the cause of the fire. </p>
