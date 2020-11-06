@@ -33,7 +33,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, img, iframe {
-    animation: appear 1.5s cubic-bezier(0, 0, .78, .36) 1;
+    animation: appear 1s cubic-bezier(0, 0, .78, .36) 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
