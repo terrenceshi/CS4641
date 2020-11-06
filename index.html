@@ -68,7 +68,10 @@
             <div id = "process">
 		        <h3>Process</h3>
 		        <h4>Cleansing the Data</h4>
-		        <p>
+                <p>
+                    When we first received the file we received the data in approximately 1.8 million rows with 28 columns that denoted many attributes of the fires that were good to know at a high level but proved to be redundant if not distracting from the primary variables that we actually wanted. Instead, we utilized a data viewer in order to determine a smaller subset of data that would prove to be more conducive to further application of machine learning principles that we have listed below.
+                </p>
+                <p>
 					FOD_ID = Global unique identifier.
 					<br>FPA_ID = Unique identifier that contains information necessary to track back to the original record in the source dataset.
 					<br>FIRE_CODE = Code used within the interagency wildland fire community to track and compile cost information for emergency fire suppression (https://www.firecode.gov/).
@@ -88,18 +91,33 @@
 					<br>LONGITUDE = Longitude (NAD83) for point location of the fire (decimal degrees).
 					<br>STATE = Two-letter alphabetic code for the state in which the fire burned (or originated), based on the nominal designation in the fire report.
 					<br>COUNTY = County, or equivalent, in which the fire burned (or originated), based on nominal designation in the fire report.
-		        </p>
+                </p>
+                
+                <h4>Data Preprocessing</h4>
+		        <p>
+		        	Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates Julian dates to Gregorian dates, which are much more comprehensible. This was a complex process that involved reading in the data and applying custom pandas datetime function in order to convert the main dates into Gregorian dates. However, the next step was then to find a way to combine a string representation of time with a datetime object. We accomplished this by utilizing the datetime.todelta() function which was able to accept a integer representation of hours and minutes which we were able to extract from the string time representation through a bespoke lambda function. We were then able to df.fillna() any empty spaces in order to prevent the iterrows() function from erroring when converting dates and embedding them in a new column at scale for the 1 million rows we had left. Finally, the duration of the fire is a simple subtraction from the datetime representation of discovery of the fire to the datetime representation date that it was contained.
+                </p>
+                <p>
+                    <pre>
+    <code>
+for index_label, row_series in data.iterrows():
+    data.at[index_label , 'DISC_DATETIME'] = row_series['DISC_DATE']\
+    + dt.timedelta(hours=int(row_series['DISCOVERY_HOUR']),minutes=int(row_series['DISCOVERY_MINUTE']))
+    data.at[index_label , 'CONT_DATETIME'] = row_series['CONTAIN_DATE']\
+    + dt.timedelta(hours=int(row_series['CONT_HOUR']),minutes=int(row_series['CONT_MINUTE']))    
+data['time_diff'] = data['CONT_DATETIME']-data['DISC_DATETIME']    
+</code>   
+                    </pre>
+                The above code produces a final dataframe that includes the combined datetime objects as well as a column denoting the final differences in between the discovery and contain date. 
 
+                </p>
 		        <h4>Searching for outliers and creating new features</h4>
 		        <p>
-		        	Using the dataset, we can create features that may provide more information to us. Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates from timestamps to Julian dates, which are much more comprehensible. Next, the duration is a simple subtraction from the discovery of the fire to the date it was contained. Finally, from our Julian dates, we can extract the month, date, and year of each fire. The other preprocessing code simply formats the state and cause features properly.
+		        	Using the dataset, we can create features that may provide more information to us. We can extract the month, date, and year of each fire from our conver Julian dates. The other preprocessing code simply formats the state and cause features properly.
 	        	</p>
                 <p>
 	        	<pre>
 <code>#Preprocessing
-fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
 fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
 fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
 fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
