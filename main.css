@@ -33,7 +33,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, img, iframe {
-    animation: appear 1.5s cubic-bezier(0, 0, .78, .36) 1;
+    animation: appear 1s cubic-bezier(0, 0, .78, .36) 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -77,6 +77,7 @@ img {
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
     left: 0%;
+    z-index: 10;
 }
 
 .navbar a {
@@ -104,9 +105,22 @@ img {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
 }
 
-#intro, #methods, #problem, #results, #discussion, #video{
+#intro, #methods, #problem, #results, #discussion, #video, #process{
     padding-top: 50px;
     margin-top: -50px;
+}
+
+.row{
+    display: flex;
+    justify-content: center;
+}
+
+.image.nnTable{
+    margin-right: 1em;
+}
+
+.image.nnData{
+    margin-left: 1em;
 }
 
 
