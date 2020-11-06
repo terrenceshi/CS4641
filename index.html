@@ -122,6 +122,29 @@
                 
 		    </div>
 
+		    <div id = "pca">
+		        <!-- <h3>Process</h3> -->
+		        <h4>PCA</h4>
+		        <p>
+		        	Our goal here is to observe whether we may be able to reduce the dimensionality of our dataset by applying PCA and observing the formation of any clusters.
+		        	
+		        	<img src="assets/pca2.png">
+
+		        	There are no notable clusters at first glance, but a few outliers can be seen. The variance ratio of the components is [0.40717538, 0.33011864, 0.26270598]. So, the first two components contribute to about 73% of the total variance. We can try to visualize using three components instead.
+
+		        	<img src="assets/pca3angle1.png">
+		        	<img src="assets/pca3angle2.png">
+
+		        	From this angle, we can observe a cluster beginning to form. For the future, we will attempt to switch around the features used for PCA and color them based on another variable (like size of fire). This may yield more promising results in terms of a helpful dimensionality reduction! We will test a few of the training methods with these reduced dimensions later.
+
+
+
+		        </p>
+
+		    </div>
+
+
+
             
             <div id = "video">
                 <h3>Video</h3>
