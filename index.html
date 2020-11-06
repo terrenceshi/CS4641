@@ -18,6 +18,7 @@
             <a href="#methods">Methods</a>
             <a href="#results">Results</a>
             <a href="#discussion">Discussion</a>
+            <a href="#process">Process</a>
             <a href="#video">Video</a>
         </div>
         
@@ -88,6 +89,19 @@
 					<br>STATE = Two-letter alphabetic code for the state in which the fire burned (or originated), based on the nominal designation in the fire report.
 					<br>COUNTY = County, or equivalent, in which the fire burned (or originated), based on nominal designation in the fire report.
 		        </p>
+                
+                <h4>Neural Network</h4>
+                <p>In this test, we essentially used the fire size and fire duration tables to predict the cause of the fire. To start, we calculate duration by finding the difference between the contained date and the discovery date. Next, we set X to a concatenated matrix of fire size and duration, while setting y to the labels of the cause of the fire. </p>
+                <p>Afterwards, we set the y labels to numbers using preprocessing algorithms from sklearning. At this point, the data is ready to be split into testing and training datasets. We plug scale our X datasets and plug them into the neural network algorithms from sklearning. Here are the results:</p>
+                
+                <div class = row>
+                    <img alt="nn table" src="assets/Neural_networks_table.png" class = "image nnTable"/>
+
+                    <img alt="nn data" src="assets/neural_networks_data.png" class = "image nnData"/>
+                </div>
+                
+                
+                
 
 		    </div>
 
