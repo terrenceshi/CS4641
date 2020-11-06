@@ -192,8 +192,52 @@ rgr.score(X,y)</code>
 
 		    </div>
 
+            <div id = "regression">
+                <h4>Linear Regression and Multiple Linear Regression</h4>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We applied a simple linear regression model as well as a multiple linear regression model to our data. For the simple linear regression, in order to predict fire size, we test it with the duration that the fire burns (containment date - discovery date). The figure below shows the plot of duration vs. fire size from our initial data.
+                </p>
 
+                <img src="assets/duration_vs_firesize_initial.png">
 
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We then split our data into training and testing sets (70% training, 30% testing) and fit a simple linear regression model with our training X (fire duration) and y (fire size) values. From our linear regression model, we get an intercept value of 123.53351 and a coefficient value of 0.00075. Below is a graph showing the duration vs. fire size values along with the line of best fit created from out model. Also, we have the the plot of actual vs. predicted test values, as well as some model evaluation paramters.
+                </p>
+
+                <div class="row">
+                    <div class="column">
+                      <img src="assets/linear_best_fit.png" style="width:100%">
+                    </div>
+                    <div class="column">
+                      <img src="assets/linear_actual_pred.png" style="width:100%">
+                    </div>
+                </div>
+
+                <img src="assets/linear_metrics.png">
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We can see from both graphs and the RMSE/NRMSE values that our model does not predict the fire size well using only duration of the fire. This is probably because many small and large fires only burn for a short time and are contained early. For the future, we can continue to improve on our linear regression model using different features to predict fire size and spread.
+                </p>
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; Next, we perform a multiple linear regression model, using more features that we think are significant (Cause of fire, latitute, longitute, and duration) as our X and the fire size as our y. We again split our data into training and testing sets (70% training, 30% testing) and fit a multiple linear regression model. From our linear regression model, we the coefficient values for each feature shown below. Below is also a plot of actual vs. predicted test values, as well as some model evaluation paramters.
+                </p>
+
+                <div class="row">
+                    <div class="column">
+                      <img src="assets/multiple_regression_coef.png" style="width:100%">
+                    </div>
+                    <div class="column">
+                      <img src="assets/multiple_regression_metrics.png" style="width:100%">
+                    </div>
+                </div>
+
+                <img src="assets/multiple_regression_actual_pred.png">
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We can see from both graphs and the RMSE/NRMSE values that our model does not improve upon the simple linear regression very much, even though we added addtion features that would thought would be impactful. For the future, we will attempt to create a multiple linear regression model with different variables to predict that may be significant in prediciting the spread of wildfires as well. We will also train and test these models using the dataset reduced using PCA to see if there are any significant improvements. We will also test our dataset using different types of regression, such as logistic and ridge. All in all, our current results for simple and multiple linear regression have pointed us in the right direction for the future.
+                </p>
+            </div>
             
             <div id = "video">
                 <h3>Video</h3>
