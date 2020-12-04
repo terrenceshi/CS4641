@@ -94,14 +94,14 @@ data['time_diff'] = data['CONT_DATETIME']-data['DISC_DATETIME']
             <div id = "methods">
                 <h3>Methods</h3>
                 <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;We will use Principal Component Analysis (PCA) to reduce the dimensionality of variables in our <a href="https://www.kaggle.com/rtatman/188-million-us-wildfires">kaggle wildfires dataset</a>, allowing us to determine which features accurately represent our data. We will test a few different methods with both the PCA-reduced and raw dataset. To predict the spread of a fire based on other variables, like duration, location, and cause of the wildfire, we will use supervised learning methods like linear regression, neural nets, decision trees, and/or SVM. We will randomly select training and testing data for each year in our dataset. We may also perform time series forecasting to predict differences in wildfires over the years.
+                    &nbsp;&nbsp;&nbsp;&nbsp;We will attempt to use Principal Component Analysis (PCA) to reduce the dimensionality of variables in our <a href="https://www.kaggle.com/rtatman/188-million-us-wildfires">kaggle wildfires dataset</a>, allowing us to determine which features accurately represent our data. To predict the spread of a fire based on other variables, like duration, location, and cause of the wildfire, we will use supervised learning methods like linear regression, neural nets, decision trees, random forests, and gradient boosting. We will randomly select training (70%) and testing (30%) data to run our models.
                 </p>
             </div>
             
             <div id = "results">
-                <h3>Potential Results</h3>
+                <h3>Results</h3>
                 <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;We expect to be able to predict areas at high-risk to fires as a result of our methods, as well as generate a predictable spread of any given fire. These can be visually mapped on a heat map with a time slider that would serve as a good way to visualize our results. In addition, we could also factor in elements such as potential property damage and city preparedness to the model. We expect the PCA to do well to identify key factors contributing to the spread of wildfires, and that a CNN will do a good job with predicting a path of spread. However, other supervised learning methods may also perform well.
+                    &nbsp;&nbsp;&nbsp;&nbsp;We hope to predict the spread of any given fire. This accuracy was highest (70%+) for the gradient boosted model and decision tree, and we will further discuss our findings in the discussion. 
 
                 </p>
 
