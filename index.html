@@ -174,7 +174,7 @@ rgr = RidgeCV().fit(X,y)
 rgr.score(X,y)</code>
                     </pre>
                 </p>
-                Unfortunately, despite numerous attempts, we were unable to generate a good model thus far, producing scores close to zero (score = 0.0013). Despite trying +1 normalization, removing any fires with duration 0, and different models (even using polynomial fits), no model seemed to do the trick. I believe this may be because the overall duration of fires may not increase much in the summer, but instead we may just see more a combination of having more fires in the summer and a higher <b>chance</b> that a fire can last longer. In other words, fires didn't just uniformly increase in duration in the summer - you can see that there are still a number of fires that don't last long at all (the majority of fires). Another approach may be warranted to capture this in prediction model. In future experiments, we hope to capture this information perhaps perhaps by generating distribution data for each month or each day even. This may help us peer into the inner workings of fires and solve our prediction problem.
+                Unfortunately, despite numerous attempts, we were unable to generate a good model using ridge regression, producing scores close to zero (score = 0.0013). Despite trying +1 normalization, removing any fires with duration 0, and different models (even using polynomial fits), no model seemed to do the trick. I believe this may be because the overall duration of fires may not increase much in the summer, but instead we may just see more a combination of having more fires in the summer and a higher <b>chance</b> that a fire can last longer. In other words, fires didn't just uniformly increase in duration in the summer - you can see that there are still a number of fires that don't last long at all (the majority of fires). Another approach may be warranted to capture this in prediction model.
                 </p>
                 
                 <h4>Neural Network</h4>
@@ -338,7 +338,55 @@ rgr.score(X,y)</code>
 
                 </p>
             </div>
-            
+
+            <div id = "random forest">
+                <h4>Random Forests to Predict Fire Duration</h4>
+                <p>
+                    How exciting it is to get to create a random forest in a project about forest fires! Using what we have learned previously about the nature of forest fires and where they are located, can we use this information to predict how long a fire will last? This is after all a very important question to ask, as depending on the duration of the fire, residents may have to evacuate for days, weeks, or even months. If we can predict the relative duration of a forest fire, residents and governments can have a rough timeframe to plan around!
+                </p>
+                <p>
+                    We split the fires into 10 categories - 
+                    <ol>
+                        <li>Lasts less than 1 day</li>
+                        <li>Lasts 1-5 days (<1 week)</li>
+                        <li>Lasts 5-15 days (1-2 weeks)</li>
+                        <li>Lasts 15-30 days (2 weeks-1 month)</li>
+                        <li>Lasts 1-2 months</li>
+                        <li>Lasts 2-3 months</li>
+                        <li>Lasts 3-4 months</li>
+                        <li>Lasts 4-5 months</li>
+                        <li>Lasts 5-6 months</li>
+                        <li>Lasts more than 6 months</li>
+                    </ol>
+                </p>
+                <p>
+                    Let's take a look at the distribution of fires into these classes. It looks like the vast majority of fires are in bin 0, meaning they last less than a day, with exponential dropoff as time goes on. This makes sense as uncontrolled or long-lasting fires should be rare.
+                    <img src = "histogram.jpg">
+
+                    Now we can work our random forest magic on the dataset! We use the features DOTY (day of the year), Latitude, Longitude, and Fire Size to create estimators of duration class. In other words, we would like to predict how long a fire may last given the location it is in, the time of the year it starts, and the size of the fire. Our code looks something like this:
+
+                    <pre>
+<code>X = removed_outliers[['DOTY','LATITUDE','LONGITUDE','FIRE_SIZE']]
+y = removed_outliers['DURATION_CLASS']
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+rfc = RandomForestClassifier(max_depth = depth, n_estimators = estimators, oob_score = True, random_state=42)
+rfc.fit(X_train, y_train)
+training_scores.append(rfc.score(X_train,y_train))
+oob_scores.append(rfc.oob_score_)</code>
+                    </pre>
+                    I split the dataset into training and testing data just in case the out of bag score (oob) was to be inaccurate. However, the two were closely related as expected.
+                </p>
+
+            <h5>Aside: HYPED for HYPERPARAMETERS</h5>
+                <p>
+                    Unfortunately, the random forest yielded very bad scores when run on default parameters. To address this problem, I did some hyperparameter estimation on a (much) smaller dataset to find more optimal parameters. Mainly, I looked at max depth (the maximum depth of each tree), number of estimators (number of trees created), and min_samples_leaf (the minimum samples required to split a node). Very quickly I realized that changing min_samples_leaf only made the error much worse as the classification problem does not benefit from it changing. Then, I iterated through 20 different models at varying levels of estimators and depth to scout out the terrain and plotted the training and oob scores.
+                    <img src = "hyperparams1.jpg">
+                    <img src = "hyperparams.jpg">
+                    First, notice that in terms of max depth, 5 is too little, but anything more than 10 is already looking very good, which tells us that not much more information is really there at a deeper depth. In addition, it seems that increasing the number of estimators does not do much at all, both in the training data and test data. From this, we can take some of the more optimal settings and feed them back into our big dataset.
+                </p>
+                
+
+
             <div id = "video">
                 <h3>Video</h3>
 
@@ -348,6 +396,10 @@ rgr.score(X,y)</code>
 
             </div>
 
+            <h3>Acknowledgements</h3>
+            <p>
+                Big shoutouts to DeepNote which we discovered during the course of this project!
+            </p>
             
             <h3>References</h3>
             <p>
