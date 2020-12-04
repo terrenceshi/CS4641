@@ -369,7 +369,7 @@ rgr.score(X,y)</code>
 <code>X = removed_outliers[['DOTY','LATITUDE','LONGITUDE','FIRE_SIZE']]
 y = removed_outliers['DURATION_CLASS']
 X_train, X_test, y_train, y_test = train_test_split(X, y)
-rfc = RandomForestClassifier(max_depth = depth, n_estimators = estimators, oob_score = True, random_state=42)
+rfc = RandomForestClassifier(max_depth = depth, n_estimators = estimators, oob_score = True)
 rfc.fit(X_train, y_train)
 training_scores.append(rfc.score(X_train,y_train))
 oob_scores.append(rfc.oob_score_)</code>
