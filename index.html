@@ -378,7 +378,8 @@ oob_scores.append(rfc.oob_score_)</code>
             <h3>Discussion</h3>
             
             <p>
-                &nbsp;&nbsp;&nbsp;&nbsp;Being able to predict the intensity of wildfires and how they will spread would allow people to contain them and greatly minimize potential damages and costs. It would also allow people to take appropriate steps to evacuate and avoid dangerous areas before the wildfires grow in intensity. 
+                &nbsp;&nbsp;&nbsp;&nbsp;Being able to predict the intensity of wildfires and how they will spread would allow people to contain them and greatly minimize potential damages and costs. It would also allow people to take appropriate steps to evacuate and avoid dangerous areas before the wildfires grow in intensity. We found that our duration variable was a rather influential variable. Most of our models had low accuracy when it came to classifying fire size, nor were we able to find notable clusters. However, our later methods were more promising, especially when reducing the number of classes to 3 for fire size. Our model was very effective at predicting fire size when it was small, as can be seen in our results from gradient boosting, decision tree, and random forest. Our approach is novel because we attempted to classify fire size and duration based on the other variables, whereas others have tried to predict fire cause based the other variables using supervised learning techniques.
+
             </p>
         </div>
 
@@ -404,7 +405,7 @@ oob_scores.append(rfc.oob_score_)</code>
                 </p>
 
                 <p>
-                    After trying many methods, with ranging but fairly low accuracies (60% range), we can conclude that duration, cause, coordinates, month, and state are not reasonable features to predict the size of a fire. The majority of our data was for smaller class fires, and while our model performed well for smaller fires (Gradient Boosted, Decision Tree, Random Forest), it did not perform well for mid- and large fires. We should consider more factors (like weather, potentially) in the future to better predict medium and large fires.
+                    After trying many methods, with ranging but fairly low accuracies (60% range), we can conclude that duration, cause, coordinates, month, and state are not reasonable features to predict the size of a fire. The majority of our data was for smaller class fires, and while our model performed well for smaller fires (Gradient Boosted, Decision Tree, Random Forest), it did not perform well for medium and large fires. We should consider more factors (like weather, potentially) in the future to better predict medium and large fires.
 
                 </p>
 
@@ -425,10 +426,6 @@ oob_scores.append(rfc.oob_score_)</code>
 
             <h3>Acknowledgements</h3>
             <p>
-                Huge thanks to Mahdi and all the TAs for being awesome teachers!<br/>
-                "GOOD MORNING"<br/>
-                "And now the rings are belling"<br/>
-                "And you will say to me Mahdi that seems like magic ... we will be magicians in this class" - Mahdi, probably<br/>
                 Big shoutouts to DeepNote which we discovered during the course of this project!
             </p>
             
