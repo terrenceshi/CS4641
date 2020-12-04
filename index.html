@@ -16,7 +16,8 @@
             <a href="#intro">Intro</a>
             <a href="#problem">Problem</a>
             <a href="#datacollect">Data Collection</a>
-            <a href="#methods">Methods, Results, and Discussion</a>
+            <a href="#methods">Methods & Results</a>
+            <a href="#discussion">Discussion</a>
             <a href="#conclusions">Conclusions</a>
             <a href="#video">Video</a>
         </div>
@@ -36,7 +37,7 @@
             <div id = "problem">
                 <h3>Problem Definition</h3>
                 <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;Knowing the destructive nature of fires by humans (e.g. Prestemon et al. 2002; Mercer and Prestemon 2005; Prestemon and Butry 2005; Mercer et al. 2007; Prestemon et al. 2013) most prevalent within areas throughout the West Coast and MidWest we seek to ameliorate the potential occurrence of wildfires through the usage of machine learning and advanced data visualization techniques. This would involve predicting areas of high risk areas prone to unmitigatable fires, constantly adding in new data in order to create predictive and proactive options for fire detection, and finally creating an environment where spread prediction can also be observed and create data-driven actionable steps to defend populations.
+                    &nbsp;&nbsp;&nbsp;&nbsp;Knowing the destructive nature of fires by humans (e.g. Prestemon et al. 2002; Mercer and Prestemon 2005; Prestemon and Butry 2005; Mercer et al. 2007; Prestemon et al. 2013) most prevalent within areas throughout the West Coast and MidWest we seek to ameliorate the potential occurrence of wildfires through the usage of machine learning and advanced data visualization techniques. This would involve predicting areas of high risk areas prone to unmitigatable fires, constantly adding in new data in order to create predictive and proactive options for fire detection, and finally creating an environment where spread prediction can also be observed and create data-driven actionable steps to defend populations. We imagine that some potential difficulties we will face is that the data that the model ingests may not be complete or accurate enough to dynamically predict wildfires at the granularity that we desire or consider effective due to feeding live data into existing models (e.g. Salehi et al. 2016.)
                 </p>
             </div>
 
@@ -89,14 +90,12 @@ data['time_diff'] = data['CONT_DATETIME']-data['DISC_DATETIME']
             </div>
 
             <div id = "methods">
-                <h3>Methods</h3>
+                <h3>Methods and Results</h3>
                 <p>
                     &nbsp;&nbsp;&nbsp;&nbsp;We used Principal Component Analysis (PCA) to reduce the dimensionality of variables in our <a href="https://www.kaggle.com/rtatman/188-million-us-wildfires">kaggle wildfires dataset</a>, allowing us to determine which features accurately represent our data. To predict the spread of a fire based on other variables, like duration, location, and cause of the wildfire, we will use supervised learning methods like linear regression, neural nets, decision trees, random forests, and gradient boosting. We will randomly select training (70%) and testing (30%) data to run our models.We implement these mentioned methods within our Process section in this website.
                 </p>
 
                 
-		        <h3>Process</h3>
-
 		        <h4>Searching for outliers and creating new features</h4>
 		        <p>
 		        	Using the dataset, we can create features that may provide more information to us. We can extract the month, date, and year of each fire from our conver Julian dates. The other preprocessing code simply formats the state and cause features properly.
@@ -190,7 +189,7 @@ rgr.score(X,y)</code>
 		        	<img src="assets/pca3angle1.png">
 		        	<img src="assets/pca3angle2.png">
 
-		        	From this angle, we can observe a cluster beginning to form. For the future, we will attempt to switch around the features used for PCA and color them based on another variable (like size of fire). This may yield more promising results in terms of a helpful dimensionality reduction! We will test a few of the training methods with these reduced dimensions later.
+		        	From this angle, we can observe a cluster beginning to form. For the future, we will attempt to switch around the features used for PCA and color them based on another variable (like size of fire). This may yield more promising results in terms of a helpful dimensionality reduction!
 		        </p>
 		    </div>
 
@@ -375,17 +374,14 @@ oob_scores.append(rfc.oob_score_)</code>
                 <img src="assets/rfc.png">
                 <img src="assets/randomtree.png">
 
-                <h3>Results</h3>
-                <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;We hope to predict the spread of any given fire. This accuracy was highest (70%+) for the gradient boosted model and decision tree, and we will further discuss our findings in the process portion where we will go in depth through visualizations of the effectiveness of our model as well as the efficacy of the work that we have done.
+        <div id = "discussion">
+            <h3>Discussion</h3>
+            
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;Being able to predict the intensity of wildfires and how they will spread would allow people to contain them and greatly minimize potential damages and costs. It would also allow people to take appropriate steps to evacuate and avoid dangerous areas before the wildfires grow in intensity. 
+            </p>
+        </div>
 
-                </p>
-
-
-                <h3>Discussion</h3>
-                <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;Being able to predict the location and intensity of wildfires and detect where they are quickly and how they will spread would allow people to contain them and greatly minimize potential damages and costs. It would also allow people to take appropriate steps to evacuate and avoid dangerous areas before the wildfires grow in intensity. We imagine that some potential difficulties we will face is that the data that the model ingests may not be complete or accurate enough to dynamically predict wildfires at the granularity that we desire or consider effective due to feeding live data into existing models (e.g. Salehi et al. 2016.)
-                </p>
 
 
 
