@@ -284,31 +284,36 @@ rgr.score(X,y)</code>
                 <p>
                     We try applying gradient boosting classification to determine fire size class based on the other features. Initially, our model performs at best around 63% accuracy after fine tuning parameters to find the best learning rate, max_features, and max_depth.
 
-                    [insert pic of round 1 gradient boosting]
+                    <img src="assets/gbm1.png">
+                    <img src="assets/confusionmatrix1.png">
+                    <img src="assets/kfcv1.png">
 
                     Perhaps we can improve our accuracy by reducing the number of fire size classes from 7 to 3. We'll classify them as small, medium, and large fires.
-                    
+                </p>
+
+                <p>
                     Small = class A, B (0-9.9 acres)
                     Medium = class C, D, E, F (10-4999 acres)
                     Large = class G (5000+ acres)
+                </p>
 
+                <p>
                     We'll try applying the model again with this modified dataset. 
 
-                    [insert pic of round 2 gradient boosting]
-
+                    <img src="assets/gbm2.png">
+    
                     Our accuracy increases to nearly 80%! We will again fine tune the parameters and see if we can further increase accuracy. 
-
-                    [insert pic of optimized gradient boosting yay]
+                    <img src="assets/gbm3.png">
 
                     We can evaluate our classifier by checking its accuracy and creating a confusion matrix.
 
-                    [insert pic of confusion matrix]
+                    <img src="assets/confusionmatrix3.png">
 
                     We'll also use cross validation to ensure that overfitting is not occurring in our model.
 
-                    [insert pic of cross val]
+                    <img src="assets/kfcv3.png">
 
-                    Pretty much the conclusion is that our model can reasonably predict whether a fire will be small with good accuracy based on duration, cause, etc etc features, but more factors would be necessary to better predict medium and large fires. Adrianna will write more about the conclusion lols.
+                    Pretty much the conclusion is that our model can reasonably predict whether a fire will be small with good accuracy based on duration, cause, etc etc features, but more factors would be necessary to better predict medium and large fires. 
 
 
                 </p>
