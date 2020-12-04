@@ -291,8 +291,15 @@ rgr.score(X,y)</code>
                 <p>
                     We try applying gradient boosting classification to determine fire size class based on the other features. Initially, our model performs at best around 63% accuracy after fine tuning parameters to find the best learning rate, max_features, and max_depth.
 
-                    <img src="assets/gbm1.png">
-                    <img src="assets/confusionmatrix1.png">
+                    <div class="row">
+                        <div class="column">
+                            <img src="assets/gbm1.png" style="width:100%">
+                        </div>
+                        <div class="column">
+                            <img src="assets/confusionmatrix1.png" style="width:100%">
+                        </div>
+                    </div>
+
                     <img src="assets/kfcv1.png">
 
                     Perhaps we can improve our accuracy by reducing the number of fire size classes from 7 to 3. We'll classify them as small, medium, and large fires.
@@ -305,13 +312,19 @@ rgr.score(X,y)</code>
                 </p>
 
                 <p>
-                    We'll try applying the model again with this modified dataset. 
+                    We'll try applying the model again with this modified dataset (left). Our accuracy increases to nearly 80%! We will again fine tune the parameters and see if we can further increase accuracy (right).
 
-                    <img src="assets/gbm2.png">
+
+                    <div class="row">
+                        <div class="column">
+                            <img src="assets/gbm2.png" style="width:100%">
+                        </div>
+                        <div class="column">
+                            <img src="assets/gbm3.png" style="width:100%">
+                        </div>
+                    </div>
+
     
-                    Our accuracy increases to nearly 80%! We will again fine tune the parameters and see if we can further increase accuracy. 
-                    <img src="assets/gbm3.png">
-
                     We can evaluate our classifier by checking its accuracy and creating a confusion matrix.
 
                     <img src="assets/confusionmatrix3.png">
