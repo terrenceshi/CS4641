@@ -361,8 +361,9 @@ rgr.score(X,y)</code>
                 </p>
                 <p>
                     Let's take a look at the distribution of fires into these classes. It looks like the vast majority of fires are in bin 0, meaning they last less than a day, with exponential dropoff as time goes on. This makes sense as uncontrolled or long-lasting fires should be rare.
-                    <img src = "histogram.jpg">
-
+                </p>
+                    <img src = "assets/histogram.jpg">
+                <p>
                     Now we can work our random forest magic on the dataset! We use the features DOTY (day of the year), Latitude, Longitude, and Fire Size to create estimators of duration class. In other words, we would like to predict how long a fire may last given the location it is in, the time of the year it starts, and the size of the fire. Our code looks something like this:
 
                     <pre>
@@ -380,15 +381,18 @@ oob_scores.append(rfc.oob_score_)</code>
             <h5>Aside: HYPED for HYPERPARAMETERS</h5>
                 <p>
                     Unfortunately, the random forest yielded very bad scores when run on default parameters. To address this problem, I did some hyperparameter estimation on a (much) smaller dataset to find more optimal parameters. Mainly, I looked at max depth (the maximum depth of each tree), number of estimators (number of trees created), and min_samples_leaf (the minimum samples required to split a node). Very quickly I realized that changing min_samples_leaf only made the error much worse as the classification problem does not benefit from it changing. Then, I iterated through 20 different models at varying levels of estimators and depth to scout out the terrain and plotted the training and oob scores.
-                    <img src = "hyperparams1.jpg">
-                    <img src = "hyperparams.jpg">
+                </p>
+                    <img src = "assets/hyperparams1.jpg">
+                    <img src = "assets/hyperparams.jpg">
+                <p>
                     First, notice that in terms of max depth, 5 is too little, but anything more than 10 is already looking very good, which tells us that not much more information is really there at a deeper depth. In addition, it seems that increasing the number of estimators does not do much at all, both in the training data and test data. From this, we can take some of the more optimal settings and feed them back into our big dataset.
                 </p>
 
             <h5>Final forest</h5>
                 <p>
-                    Using the max depth of 15 and 200 estimators, the random forest classifier was consistently able to achieve a score of ~0.7, which is unfortunately not the best. However, this is still much better than previous results and is promising as the basis of future trees. If more one or two more relevant features could be added, I'm sure we would be looking at a very nice accuracy. Here's a sample estimator/tree from the forest:
+                    Using the max depth of 15 and 200 estimators, the random forest classifier was consistently able to achieve a score of ~0.7, which is unfortunately not the best. However, this is still much better than previous results and is promising as the basis of future trees. If more one or two more relevant features could be added, I'm sure we would be looking at a very nice accuracy. Here's a sample estimator/tree from the forest (only to depth 3):
                 </p>
+                    <img src = "randomtree.jpg">
 
 
             <div id = "video">
