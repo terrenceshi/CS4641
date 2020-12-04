@@ -110,12 +110,13 @@ data['time_diff'] = data['CONT_DATETIME']-data['DISC_DATETIME']
 </code>   
                     </pre>
                 The above code produces a final dataframe that includes the combined datetime objects as well as a column denoting the final differences in between the discovery and contain date. 
-
+                <img src = "assets/datetime.jpg">
                 </p>
 		        <h4>Searching for outliers and creating new features</h4>
 		        <p>
 		        	Using the dataset, we can create features that may provide more information to us. We can extract the month, date, and year of each fire from our conver Julian dates. The other preprocessing code simply formats the state and cause features properly.
-	        	</p>
+                
+                </p>
                 <p>
 	        	<pre>
 <code>#Preprocessing
@@ -149,7 +150,7 @@ fires['STATE'] = le.fit_transform(fires['STATE']) </code>
                     This is rather interesting - it seems as if before ~1998, fires didn't last very long at all. However, I don't believe that to be the case - instead I will assume for now that fires simply were not tracked as well. This will have to be something we come back to in the future. Another very interesting finding is that we see an almost cyclical fluctuation of fire duration every year. This makes sense - after all, fires in the summer months are probably going to last longer due to the heat. Finally, we notice some very high outliers - the data indicates that one fire lasted upwards of 4 years! Unfortunately, this cannot be correct and even after looking up the fire codes and such, I found no such mention of the 4 year fire.
                 </p>
                 <p>
-                    Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
+                    Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would not do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
                 </p>
                 <img src = "assets/scatter.jpg">
                 <pre>
@@ -186,7 +187,8 @@ rgr.score(X,y)</code>
                     <img alt="nn data" src="assets/neural_networks_data.png" class = "image nnData"/>
                 </div>
                 
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;In general, the accuracy of the prediction left a little to be desired, however, the results can be positively altered by experimenting with the amount of nodes and layers. Furthermore, we can also look to predict other columns of the dataset. </p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;In general, the accuracy of the prediction left a little to be desired. Even by altering the number of nodes, layers, and even percentage of testing data, our accuracy percentage remained around 54-60%. While there may be an error with the algorithm that has not been found yet, there is also the possibility that there simply is not enough of a correlation between fire size, duration, and cause of fire to make accurate predictions.
+                </p>
                 
 		    </div>
 
@@ -204,11 +206,7 @@ rgr.score(X,y)</code>
 		        	<img src="assets/pca3angle2.png">
 
 		        	From this angle, we can observe a cluster beginning to form. For the future, we will attempt to switch around the features used for PCA and color them based on another variable (like size of fire). This may yield more promising results in terms of a helpful dimensionality reduction! We will test a few of the training methods with these reduced dimensions later.
-
-
-
 		        </p>
-
 		    </div>
 
             <div id = "regression">
@@ -257,8 +255,7 @@ rgr.score(X,y)</code>
                     &nbsp;&nbsp;&nbsp;&nbsp; We can see from both graphs and the RMSE/NRMSE values that our model does not improve upon the simple linear regression very much, even though we added addtion features that would thought would be impactful. For the future, we will attempt to create a multiple linear regression model with different variables to predict that may be significant in prediciting the spread of wildfires as well. We will also train and test these models using the dataset reduced using PCA to see if there are any significant improvements. We will also test our dataset using different types of regression, such as logistic and ridge. All in all, our current results for simple and multiple linear regression have pointed us in the right direction for the future.
                 </p>
             </div>
-<<<<<<< Updated upstream
-=======
+
 
             <div id = "conclusions">
                 <h3>Conclusions</h3> 
@@ -278,6 +275,8 @@ rgr.score(X,y)</code>
                     <img src="assets/WildfireNumbers.jpg">
                 </p>
             </div>
+
+
 
             <div id = "gradientboost">
                 <!-- <h3>Process</h3> -->
@@ -314,8 +313,6 @@ rgr.score(X,y)</code>
 
                 </p>
             </div>
-
->>>>>>> Stashed changes
             
             <div id = "video">
                 <h3>Video</h3>
