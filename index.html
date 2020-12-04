@@ -68,7 +68,10 @@
             <div id = "process">
 		        <h3>Process</h3>
 		        <h4>Cleansing the Data</h4>
-		        <p>
+                <p>
+                    When we first received the file we received the data in approximately 1.8 million rows with 28 columns that denoted many attributes of the fires that were good to know at a high level but proved to be redundant if not distracting from the primary variables that we actually wanted. Instead, we utilized a data viewer in order to determine a smaller subset of data that would prove to be more conducive to further application of machine learning principles that we have listed below.
+                </p>
+                <p>
 					FOD_ID = Global unique identifier.
 					<br>FPA_ID = Unique identifier that contains information necessary to track back to the original record in the source dataset.
 					<br>FIRE_CODE = Code used within the interagency wildland fire community to track and compile cost information for emergency fire suppression (https://www.firecode.gov/).
@@ -88,25 +91,90 @@
 					<br>LONGITUDE = Longitude (NAD83) for point location of the fire (decimal degrees).
 					<br>STATE = Two-letter alphabetic code for the state in which the fire burned (or originated), based on the nominal designation in the fire report.
 					<br>COUNTY = County, or equivalent, in which the fire burned (or originated), based on nominal designation in the fire report.
-		        </p>
-
+                </p>
+                
+                <h4>Data Preprocessing</h4>
+		        <p>
+		        	Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates Julian dates to Gregorian dates, which are much more comprehensible. This was a complex process that involved reading in the data and applying custom pandas datetime function in order to convert the main dates into Gregorian dates. However, the next step was then to find a way to combine a string representation of time with a datetime object. We accomplished this by utilizing the datetime.todelta() function which was able to accept a integer representation of hours and minutes which we were able to extract from the string time representation through a bespoke lambda function. We were then able to df.fillna() any empty spaces in order to prevent the iterrows() function from erroring when converting dates and embedding them in a new column at scale for the 1 million rows we had left. Finally, the duration of the fire is a simple subtraction from the datetime representation of discovery of the fire to the datetime representation date that it was contained.
+                </p>
+                <p>
+                    <pre>
+    <code>
+for index_label, row_series in data.iterrows():
+    data.at[index_label , 'DISC_DATETIME'] = row_series['DISC_DATE']\
+    + dt.timedelta(hours=int(row_series['DISCOVERY_HOUR']),minutes=int(row_series['DISCOVERY_MINUTE']))
+    data.at[index_label , 'CONT_DATETIME'] = row_series['CONTAIN_DATE']\
+    + dt.timedelta(hours=int(row_series['CONT_HOUR']),minutes=int(row_series['CONT_MINUTE']))    
+data['time_diff'] = data['CONT_DATETIME']-data['DISC_DATETIME']    
+</code>   
+                    </pre>
+                The above code produces a final dataframe that includes the combined datetime objects as well as a column denoting the final differences in between the discovery and contain date. 
+                <img src = "assets/datetime.jpg">
+                </p>
 		        <h4>Searching for outliers and creating new features</h4>
 		        <p>
-		        	Using the dataset, we can create features that may provide more information to us. Below is some preprocessing code we used to format our data properly. First, we were able to convert our dates from timestamps to Julian dates, which are much more comprehensible. Next, the duration is a simple subtraction from the discovery of the fire to the date it was contained. Finally, from our Julian dates, we can extract the month, date, and year of each fire. The other preprocessing code simply formats the state and cause features properly.
-	        	</p>
+		        	Using the dataset, we can create features that may provide more information to us. We can extract the month, date, and year of each fire from our conver Julian dates. The other preprocessing code simply formats the state and cause features properly.
+                
+                </p>
+                <p>
 	        	<pre>
-                    <code>#Preprocessing
-                    fires['DISC_DATE'] = pd.to_datetime(fires['DISCOVERY_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-                    fires['CONTAIN_DATE'] = pd.to_datetime(fires['CONT_DATE'] - pd.Timestamp(0).to_julian_date(), unit='D')
-                    fires['DURATION'] = fires['CONTAIN_DATE'] - fires['DISC_DATE']
-                    fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
-                    fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
-                    fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
+<code>#Preprocessing
+fires['MONTH']=pd.DatetimeIndex(fires['DISC_DATE']).month
+fires['DAY']=pd.DatetimeIndex(fires['DISC_DATE']).day
+fires['YEAR']=pd.DatetimeIndex(fires['DISC_DATE']).year
 
-                    le = preprocessing.LabelEncoder()
-                    fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
-                    fires['STATE'] = le.fit_transform(fires['STATE']) </code>   
+le = preprocessing.LabelEncoder()
+fires['STAT_CAUSE_DESCR'] = le.fit_transform(fires['STAT_CAUSE_DESCR'])
+fires['STATE'] = le.fit_transform(fires['STATE']) </code>   
 				</pre>
+                </p>
+                <p>
+                    Another nice touch we'll add is removing all data points will NaN values since sparse data is going to give us a headache.
+                </p>
+                <p>
+                <pre><code>data = data.dropna()</code></pre>
+                </p>
+                <p>
+                    Next, let's comb through some of our features and make sure everything's in order. First, let's look at the latitude and longitude plot of the fires to make sure nothing is amiss.
+                </p>
+                <img src = "assets/map.jpg">
+                <p>
+                    Wow! Look at that - the latitude and longitude points make a map of the US, a pleasant surprise. Unsurprisingly, the top half of alaska is missing - it's probably too cold there haha. But wait, why are there some points on the map in bottom left (middle of the ocean)? Could these be errors in input? Actually, after looking up those points, they seem to be the coordinates in Puerto Rico, so it's good to know just how comprehensive our dataset actually is.
+                </p>
+                <p>
+                    Another feature we must look at is the distribution of the fires over time. Originally, I thought to myself, "has firefighting gotten easier with time (e.g. - is the fire duration decreasing as time goes on)?" This is a great question to get us started at plotting the data.
+                </p>
+                <img src = "assets/cyclical.jpg">
+                <p>
+                    This is rather interesting - it seems as if before ~1998, fires didn't last very long at all. However, I don't believe that to be the case - instead I will assume for now that fires simply were not tracked as well. This will have to be something we come back to in the future. Another very interesting finding is that we see an almost cyclical fluctuation of fire duration every year. This makes sense - after all, fires in the summer months are probably going to last longer due to the heat. Finally, we notice some very high outliers - the data indicates that one fire lasted upwards of 4 years! Unfortunately, this cannot be correct and even after looking up the fire codes and such, I found no such mention of the 4 year fire.
+                </p>
+                <p>
+                    Let's try to visualize our range of data in terms of fire duration. Sure we see some very long-lasting fires, but how is our data distributed? I sorted the values and scattered the data to find out. It looks like there is an egregious number of fires that didn't last a single day - whether or not this is simply because fires were contained easily or because they simply weren't documented well enough is unclear at the moment. What we do know is that some of the longer fires are really skewing our data. So, we will remove this data via a simple statistical analysis (I think this should be reasonable because even if a fire did exist that went for extremely long, it certainly is not normal and would do our future tool any favors). Any fires that last longer than 15 standard deviations above the mean are removed with the code below.
+                </p>
+                <img src = "assets/scatter.jpg">
+                <pre>
+<code>removed_outliers2 = data[(np.abs(stats.zscore(data['BETTER_DURATION'])) < 15)]
+temp_indices = removed_outliers2['BETTER_DURATION'].gt(1)
+longer_fires = removed_outliers2[temp_indices]</code>
+                </pre>
+                <h4>Searching for yearly patterns and Ridge Regression</h4>
+                <p>
+                    Remember how we noticed a cyclical cycle in how fire lengths increased and then decreased every year? Let's take a deeper look into understanding this and start actually creating a model to predict how long a future fire might last! First we use those handy month and day features and pseudo-aggregate them into a time of the year feature which we call "DOTY". This is simply the month plus the day divided by 30, so it'll range from ~1 to 13, which is good enough for our purposes. Next we plot the DOTY against the fire duration, and voila!
+                </p>
+                <img src ="assets/year_length.jpg">
+                <p>
+                    Incroyable! While there certainly are outliers, we see a clear trend that in the summer months, the fire duration can potentially increase 5-fold. Next, let's try to generate a model to capture this information. We will use a cross-validated ridge regression model to attempt this.
+                </p>
+                <p>
+                    <pre>
+<code>X = np.array(longer_fires['DOTY']).reshape(-1, 1)
+y = np.array(longer_fires['BETTER_DURATION']).reshape(-1,1)
+rgr = RidgeCV().fit(X,y)
+rgr.score(X,y)</code>
+                    </pre>
+                </p>
+                Unfortunately, despite numerous attempts, we were unable to generate a good model thus far, producing scores close to zero (score = 0.0013). Despite trying +1 normalization, removing any fires with duration 0, and different models (even using polynomial fits), no model seemed to do the trick. I believe this may be because the overall duration of fires may not increase much in the summer, but instead we may just see more a combination of having more fires in the summer and a higher <b>chance</b> that a fire can last longer. In other words, fires didn't just uniformly increase in duration in the summer - you can see that there are still a number of fires that don't last long at all (the majority of fires). Another approach may be warranted to capture this in prediction model. In future experiments, we hope to capture this information perhaps perhaps by generating distribution data for each month or each day even. This may help us peer into the inner workings of fires and solve our prediction problem.
+                </p>
                 
                 <h4>Neural Network</h4>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;In this test, we essentially used the fire size and fire duration tables to predict the cause of the fire. To start, we calculate duration by finding the difference between the contained date and the discovery date. Next, we set X to a concatenated matrix of fire size and duration, while setting y to the labels of the cause of the fire. </p>
@@ -143,8 +211,52 @@
 
 		    </div>
 
+            <div id = "regression">
+                <h4>Linear Regression and Multiple Linear Regression</h4>
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We applied a simple linear regression model as well as a multiple linear regression model to our data. For the simple linear regression, in order to predict fire size, we test it with the duration that the fire burns (containment date - discovery date). The figure below shows the plot of duration vs. fire size from our initial data.
+                </p>
 
+                <img src="assets/duration_vs_firesize_initial.png">
 
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We then split our data into training and testing sets (70% training, 30% testing) and fit a simple linear regression model with our training X (fire duration) and y (fire size) values. From our linear regression model, we get an intercept value of 123.53351 and a coefficient value of 0.00075. Below is a graph showing the duration vs. fire size values along with the line of best fit created from out model. Also, we have the the plot of actual vs. predicted test values, as well as some model evaluation paramters.
+                </p>
+
+                <div class="row">
+                    <div class="column">
+                      <img src="assets/linear_best_fit.png" style="width:100%">
+                    </div>
+                    <div class="column">
+                      <img src="assets/linear_actual_pred.png" style="width:100%">
+                    </div>
+                </div>
+
+                <img src="assets/linear_metrics.png">
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We can see from both graphs and the RMSE/NRMSE values that our model does not predict the fire size well using only duration of the fire. This is probably because many small and large fires only burn for a short time and are contained early. For the future, we can continue to improve on our linear regression model using different features to predict fire size and spread.
+                </p>
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; Next, we perform a multiple linear regression model, using more features that we think are significant (Cause of fire, latitute, longitute, and duration) as our X and the fire size as our y. We again split our data into training and testing sets (70% training, 30% testing) and fit a multiple linear regression model. From our linear regression model, we the coefficient values for each feature shown below. Below is also a plot of actual vs. predicted test values, as well as some model evaluation paramters.
+                </p>
+
+                <div class="row">
+                    <div class="column">
+                      <img src="assets/multiple_regression_coef.png" style="width:100%">
+                    </div>
+                    <div class="column">
+                      <img src="assets/multiple_regression_metrics.png" style="width:100%">
+                    </div>
+                </div>
+
+                <img src="assets/multiple_regression_actual_pred.png">
+
+                <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp; We can see from both graphs and the RMSE/NRMSE values that our model does not improve upon the simple linear regression very much, even though we added addtion features that would thought would be impactful. For the future, we will attempt to create a multiple linear regression model with different variables to predict that may be significant in prediciting the spread of wildfires as well. We will also train and test these models using the dataset reduced using PCA to see if there are any significant improvements. We will also test our dataset using different types of regression, such as logistic and ridge. All in all, our current results for simple and multiple linear regression have pointed us in the right direction for the future.
+                </p>
+            </div>
             
             <div id = "video">
                 <h3>Video</h3>
