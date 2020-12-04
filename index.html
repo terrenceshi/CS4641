@@ -383,8 +383,8 @@ oob_scores.append(rfc.oob_score_)</code>
                     Unfortunately, the random forest yielded very bad scores when run on default parameters. To address this problem, I did some hyperparameter estimation on a (much) smaller dataset to find more optimal parameters. Mainly, I looked at max depth (the maximum depth of each tree), number of estimators (number of trees created), and min_samples_leaf (the minimum samples required to split a node). Very quickly I realized that changing min_samples_leaf only made the error much worse as the classification problem does not benefit from it changing. Then, I iterated through 20 different models at varying levels of estimators and depth to scout out the terrain and plotted the training and oob scores.
                 </p>
                 <div class="row">
-                    <img src="assets/hyperparams1.jpg">
-                    <img src="assets/hyperparams.jpg">
+                    <img src="assets/hyperparams3.jpg">
+                    <img src="assets/hyperparams2.jpg">
                 </div>
                 <p>
                     First, notice that in terms of max depth, 5 is too little, but anything more than 10 is already looking very good, which tells us that not much more information is really there at a deeper depth. In addition, it seems that increasing the number of estimators does not do much at all, both in the training data and test data. From this, we can take some of the more optimal settings and feed them back into our big dataset.
