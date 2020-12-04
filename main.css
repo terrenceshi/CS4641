@@ -106,7 +106,7 @@ img {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
 }
 
-#intro, #methods, #problem, #results, #discussion, #video, #process, #conclusions{
+#intro, #methods, #problem, #datacollect, #results, #discussion, #video, #process, #conclusions{
     padding-top: 50px;
     margin-top: -50px;
 }
